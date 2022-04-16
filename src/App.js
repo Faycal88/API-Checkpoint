@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import UserList from "./UserList";
 
 const App = () => {
@@ -8,20 +9,17 @@ const App = () => {
   
   useEffect(() => {
     setLoading(true);
-    const fetching = async () => {
-      const result = await fetch('https://jsonplaceholder.typicode.com/users')
-      if (result.status !== 200) {
-        setError(result.statusText);
-        console.log(error);
-        setLoading(false);
-        return;
-      } else {
-        const data = await result.json();
-        setUsers(data);
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(res => {
+        setUsers(res.data);
         setLoading(false);
       }
-    }
-      fetching();
+    )
+      .catch(err => {
+        setError(err);
+        setLoading(false);
+      }
+    );
   }, [error]);
 
   
